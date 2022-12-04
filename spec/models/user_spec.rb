@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -31,16 +29,40 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
-class User < ApplicationRecord
-  # ActiveRecord::Base
-  extend Devise::Models
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-  include DeviseTokenAuth::Concerns::User
-  has_many :articles, dependent: :destroy
-  has_many :article_likes, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  validates :name, presence: true
+require "rails_helper"
+
+RSpec.describe User, type: :model do
+  context "必要な情報があるとき" do
+    it "ユーザーが作成される" do
+      user = build(:user)
+      expect(user).to be_valid
+    end
+  end
+
+  context "nameがないとき" do
+    it "エラーが発生する" do
+      user = build(:user, name: nil)
+      expect(user).to be_invalid
+      # expect(user.errors.messages[:name]).to eq ["can't be blank"]
+      # binding.pry
+    end
+
+    context "emailがないとき" do
+      it "エラーが発生する" do
+        user = build(:user, email: nil)
+        expect(user).to be_invalid
+        # expect(user.errors.messages[:email]).to eq ["can't be blank"]
+        # binding.pry
+      end
+    end
+
+    context "passwordがない時" do
+      it "エラーが発生する" do
+        user = build(:user, password: nil)
+        expect(user).to be_invalid
+        # expect(user.errors.messages[:password]).to eq ["can't be blank"]
+        # binding.pry
+      end
+    end
+  end
 end
