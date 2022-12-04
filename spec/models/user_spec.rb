@@ -29,7 +29,7 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe User, type: :model do
   context "必要な情報があるとき" do
@@ -58,7 +58,7 @@ RSpec.describe User, type: :model do
 
     context "passwordがない時" do
       it "エラーする" do
-        user = build(:user, password: nil )
+        user = build(:user, password: nil)
         expect(user).to be_invalid
         expect(user.errors.messages[:password]).to eq ["can't be blank"]
         # binding.pry
