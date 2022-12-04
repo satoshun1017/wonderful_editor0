@@ -48,6 +48,7 @@ group :development do
   gem "annotate"
   gem "factory_bot_rails"
   gem "faker"
+  gem "rails-erd"
   gem "rspec-rails"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
