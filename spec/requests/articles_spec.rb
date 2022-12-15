@@ -36,7 +36,7 @@ RSpec.describe "Articles", type: :request do
         expect(res["updated_at"]).to be_present
         expect(res["user"]["id"]).to eq article.user.id
         expect(res["user"].keys).to eq ["id", "name", "email"]
-     end
+      end
     end
 
     context "指定したidのユーザーが存在しない時" do
