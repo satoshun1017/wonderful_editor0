@@ -44,5 +44,6 @@ module WonderfulEditor0
     # Don't generate system test files.
     config.generators.system_tests = nil
     config.api_only = true
+    config.middleware.use ActionDispatch::Flash
   end
 end
