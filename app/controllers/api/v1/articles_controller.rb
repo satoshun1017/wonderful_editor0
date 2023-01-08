@@ -2,8 +2,6 @@ module Api::V1
   class ArticlesController < BaseApiController
     before_action :authenticate_user!, only: [:create, :update, :destroy]
     def index
-      # ここのarticleで作成してあげる？
-      # ここからarticles_specに飛ぶはず
       articles = Article.published.order(updated_at: :desc)
       render json: articles, each_serializer: Api::V1::ArticlePreviewSerializer
     end
@@ -33,7 +31,7 @@ module Api::V1
     private
 
       def article_params
-        params.require(:article).permit(:title, :body)
+        params.require(:article).permit(:title, :body, :status)
       end
   end
 end
