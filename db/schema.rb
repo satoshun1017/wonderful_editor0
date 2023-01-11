@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2022_12_24_232604) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "status", default: "0"
+    t.string "status", default: "draft"
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(version: 2022_12_24_232604) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.string "name"
+    t.string "account"
     t.string "nickname"
     t.string "image"
     t.string "email"

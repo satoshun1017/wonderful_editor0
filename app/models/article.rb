@@ -4,7 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  body       :text
-#  status     :string           default(NULL)
+#  status     :string           default("draft")
 #  title      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

@@ -4,7 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  body       :text
-#  status     :string           default(NULL)
+#  status     :string           default("draft")
 #  title      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -25,15 +25,16 @@ RSpec.describe Article, type: :model do
     context "タイトルと本文が入力されているとき" do
       let(:article) { build(:article) }
 
-      fit "下書き状態の記事が作成できる" do
+      it "下書き状態の記事が作成できる", :aggregate_failures do
         # binding.pry
         expect(article).to be_valid
+        expect(article.status).to eq "draft"
       end
     end
 
     context "status が下書き状態のとき" do
       let(:article) { build(:article, :draft) }
-      it "記事を下書き状態で作成できる" do
+      it "記事を下書き状態で作成できる", :aggregate_failures do
         expect(article).to be_valid
         expect(article.status).to eq "draft"
       end
@@ -41,7 +42,7 @@ RSpec.describe Article, type: :model do
 
     context "status が公開状態のとき" do
       let(:article) { build(:article, :published) }
-      it "記事を公開状態で作成できる" do
+      it "記事を公開状態で作成できる", :aggregate_failures do
         expect(article).to be_valid
         expect(article.status).to eq "published"
       end

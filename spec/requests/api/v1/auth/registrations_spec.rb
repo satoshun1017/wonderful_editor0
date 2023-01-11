@@ -10,7 +10,18 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
         expect { subject }.to change { User.count }.by(1)
         res = JSON.parse(response.body)
         expect(res["status"]).to eq "success"
+        expect(res["data"]["email"]).to eq(User.last.email)
         # binding.pry
+      end
+
+      it "header 情報を取得することができる", :aggregate_failures do
+        subject
+        header = response.header
+        expect(header["access-token"]).to be_present
+        expect(header["client"]).to be_present
+        expect(header["expiry"]).to be_present
+        expect(header["uid"]).to be_present
+        expect(header["token-type"]).to be_present
       end
     end
 
@@ -36,7 +47,7 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
       end
     end
 
-    context "emailがない時" do
+    context "passswordがない時" do
       let(:params) { attributes_for(:user, password: nil) }
       it "エラーする", :aggregate_failures do
         expect { subject }.to change { User.count }.by(0)

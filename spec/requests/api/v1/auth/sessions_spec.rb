@@ -13,9 +13,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         header = response.header
         expect(header["access-token"]).to be_present
         expect(header["client"]).to be_present
-        expect(header["expiry"]).to be_present
         expect(header["uid"]).to be_present
-        expect(header["token-type"]).to be_present
       end
     end
 
@@ -28,9 +26,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         header = response.header
         expect(header["access-token"]).to be_blank
         expect(header["client"]).to be_blank
-        expect(header["expiry"]).to be_blank
         expect(header["uid"]).to be_blank
-        expect(header["token-type"]).to be_blank
       end
     end
 

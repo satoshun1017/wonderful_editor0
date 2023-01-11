@@ -4,15 +4,18 @@ RSpec.describe "Articles", type: :request do
   describe "GET /articles" do
     subject { get(api_v1_articles_path) }
 
-    let!(:article) { create(:article, :published) }
+    let!(:article1) { create(:article, :published, updated_at: 1.days.ago) }
+    let!(:article2) { create(:article, :published, updated_at: 2.days.ago) }
+    let!(:article3) { create(:article, :published) }
     before { create(:article, :draft) }
+
     it "記事の一覧が取得できる", :aggregate_failures do
       # create(:article, :published)
       # binding.pry
       subject
       # binding.pry
       res = JSON.parse(response.body)
-      expect(res.length).to eq 1
+      expect(res.length).to eq 3
       expect(res[0].keys).to eq ["id", "title", "updated_at", "user"]
       expect(res[0]["user"].keys).to eq ["id", "name", "email"]
       expect(response).to have_http_status(:ok)
@@ -26,20 +29,20 @@ RSpec.describe "Articles", type: :request do
       let(:article_id) { article.id }
       context "対象の記事が公開中の時" do
         let(:article) { create(:article, :published) }
-      it "そのユーザーのレコードが取得できる", :aggregate_failures do
-        subject
-        # binding.pry
-        res = JSON.parse(response.body)
-        expect(response).to have_http_status(:ok)
-        expect(res.length).to eq 6
-        expect(res.keys).to eq ["id", "title", "body", "status", "updated_at", "user"]
-        expect(res["id"]).to eq article.id
-        expect(res["title"]).to eq article.title
-        expect(res["updated_at"]).to be_present
-        expect(res["user"]["id"]).to eq article.user.id
-        expect(res["user"].keys).to eq ["id", "name", "email"]
+        it "そのユーザーのレコードが取得できる", :aggregate_failures do
+          subject
+          # binding.pry
+          res = JSON.parse(response.body)
+          expect(response).to have_http_status(:ok)
+          expect(res.length).to eq 6
+          expect(res.keys).to eq ["id", "title", "body", "status", "updated_at", "user"]
+          expect(res["id"]).to eq article.id
+          expect(res["title"]).to eq article.title
+          expect(res["updated_at"]).to be_present
+          expect(res["user"]["id"]).to eq article.user.id
+          expect(res["user"].keys).to eq ["id", "name", "email"]
+        end
       end
-     end
     end
 
     context "指定したidのユーザーが存在しない時" do
@@ -52,8 +55,9 @@ RSpec.describe "Articles", type: :request do
 
   describe "POST /articles" do
     subject { post(api_v1_articles_path, params: params, headers: headers) }
+
     let(:current_user) { create(:user) }
-      let(:headers) { current_user.create_new_auth_token }
+    let(:headers) { current_user.create_new_auth_token }
     context "適切なパラメーターを送信したとき" do
       let(:params) { { article: attributes_for(:article, :published) } }
       # let(:current_user) { create(:user) }
@@ -62,9 +66,10 @@ RSpec.describe "Articles", type: :request do
       # before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
 
       it "ユーザーのレコードが作成できる", :aggregate_failures do
-        expect { subject }.to change { Article.count }.by(1)
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
         res = JSON.parse(response.body)
         expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
       end
     end
   end
