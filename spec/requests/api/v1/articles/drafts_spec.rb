@@ -11,7 +11,7 @@ RSpec.describe "Api::V1::Articles::Drafts", type: :request do
       let!(:article1) { create(:article, :draft, user: current_user) }
       let!(:article2) { create(:article, :draft) }
 
-      it "自分が書いた下書き記事の一覧のみが取得できる" do
+      it "自分が書いた下書き記事の一覧のみが取得できる", :aggregate_failures do
         subject
         res = JSON.parse(response.body)
 
@@ -33,7 +33,7 @@ RSpec.describe "Api::V1::Articles::Drafts", type: :request do
       context "対象の記事が自分が書いた下書きのとき" do
         let(:article) { create(:article, :draft, user: current_user) }
 
-        it "記事の詳細を取得できる" do
+        it "記事の詳細を取得できる", :aggregate_failures do
           subject
           res = JSON.parse(response.body)
 

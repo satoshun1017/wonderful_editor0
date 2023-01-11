@@ -16,7 +16,7 @@ RSpec.describe "Api::V1::Current::Articles", type: :request do
         create(:article, :published)
       end
 
-      it "自分の記事を閲覧できる" do
+      it "自分の記事を閲覧できる", :aggregate_failures do
         subject
         # binding.pry
         res = JSON.parse(response.body)
